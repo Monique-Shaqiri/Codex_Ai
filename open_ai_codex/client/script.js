@@ -73,6 +73,25 @@ const handleSubmit = async (e) => {
   chatContainer.scrollTop = chatContainer.scrollHeight;
   const messageDiv = document.getElementById(uniqueId);
   loader(messageDiv);
+  // fetch data from server
+  const response = await fetch('http://localhost:5002,',{
+    method: 'POST',
+    headers:{
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        prompt: data.get('prompt')
+    })
+  })
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = "";
+  
+  if(response.ok){
+    const data = await response.json();
+    const parseData = data.bot.trim();
+    typeText(messageDiv,parseData);
+  }
+  
 
 }
 form.addEventListener('submit',handleSubmit);
